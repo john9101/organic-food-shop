@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: organicFoodShop
+  datasource:
+    url: jdbc:mysql://localhost:3306/organicFoodShop
+    username: root
+    password: Dong@98109810100
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
