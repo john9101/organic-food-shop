@@ -2,7 +2,9 @@ package com.spring.project.organicfoodshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.spring.project.organicfoodshop.util.constant.GenderEnum;
+import com.spring.project.organicfoodshop.repository.CartRepository;
+import com.spring.project.organicfoodshop.util.RandomUtil;
+import com.spring.project.organicfoodshop.util.constant.GenderTypeEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,14 +12,16 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
-        @Index(name = "idx_role_id", columnList = "role_id")
-})
+//@Table(name = "users", indexes = {
+//        @Index(name = "idx_user_id", columnList = "user_id"),
+//        @Index(name = "idx_role_id", columnList = "role_id")
+//})
+@Table(name = "users")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     @Serial
@@ -28,14 +32,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private String password;
 
-    private String firstName;
-
-    private String lastName;
+    private String fullName;
 
     private Integer age;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private GenderTypeEnum gender;
 
     private String email;
 
@@ -43,19 +45,33 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_roles",
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Boolean activated;
-
-    @JsonIgnore
-    private String activationKey;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Boolean blocked;
 
+    private String resetPasswordToken;
+
+    private String activationToken;
+
     private String avatar;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
+
+    @PrePersist
+    protected void onPrePersistUser() {
+        this.activated = false;
+        this.blocked = false;
+        this.resetPasswordToken = null;
+        this.activationToken = UUID.randomUUID().toString();
+        this.setCreatedBy(this.email);
+    }
 }
 

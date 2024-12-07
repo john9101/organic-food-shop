@@ -14,19 +14,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+//        String email = authentication.getName();
+        String email = authentication.getPrincipal().toString();
         String password = authentication.getCredentials().toString();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect");
         }else {
-            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
+//            return new UsernamePasswordAuthenticationToken(customUserDetailsService.getInitializedPrincipal(), password, userDetails.getAuthorities());
         }
     }
 

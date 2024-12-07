@@ -1,5 +1,7 @@
 package com.spring.project.organicfoodshop.config;
 
+import com.spring.project.organicfoodshop.util.SecurityUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,12 +12,13 @@ import java.util.Optional;
 @Component
 public class CustomAuditorAware implements AuditorAware<String> {
 
+    @NotNull
     @Override
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
         }
-        return Optional.of(authentication.getPrincipal().toString());
+        return Optional.of(SecurityUtil.extractFromPrincipal(authentication));
     }
 }

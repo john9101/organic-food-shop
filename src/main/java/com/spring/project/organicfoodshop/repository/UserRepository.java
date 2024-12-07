@@ -9,6 +9,8 @@ import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, BaseRepository<User, Long>  {
+    Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
-    Optional<User> findOneByActivationKey(String activationKey);
+
+    User findByActivationToken(String activationToken);
 }

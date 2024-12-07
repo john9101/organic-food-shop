@@ -1,7 +1,6 @@
 package com.spring.project.organicfoodshop.service.validator;
 
 import com.spring.project.organicfoodshop.domain.request.auth.RegisterRequest;
-import com.spring.project.organicfoodshop.service.UserService;
 import com.spring.project.organicfoodshop.util.annotation.AdvanceRequestBodyValidation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -33,7 +32,7 @@ public class AdvanceRegisterValidator implements ConstraintValidator<AdvanceRequ
 
         if(!password.equals(confirmPassword)) {
             constraintValidatorContext
-                    .buildConstraintViolationWithTemplate("Confirm password does not match")
+                    .buildConstraintViolationWithTemplate("This confirm password does not match")
                     .addPropertyNode("confirmPassword")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();

@@ -23,7 +23,7 @@ public class JwtConfiguration {
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey())
-                .macAlgorithm(SecurityUtil.JWT_ALGORITHM).build();
+                .macAlgorithm(SecurityUtil.jwtAlgorithm).build();
         return token -> {
             try {
                 return jwtDecoder.decode(token);
@@ -40,6 +40,6 @@ public class JwtConfiguration {
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.from(jwtKey).decode();
-        return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtil.JWT_ALGORITHM.getName());
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtil.jwtAlgorithm.getName());
     }
 }

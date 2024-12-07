@@ -14,13 +14,14 @@ import java.util.Set;
 @Entity
 @Table(name = "permissions")
 public class Permission extends AbstractAuditingEntity implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 1L;
 
     private String module;
 
     private String name;
+
+    private Boolean active;
 
     private String description;
 

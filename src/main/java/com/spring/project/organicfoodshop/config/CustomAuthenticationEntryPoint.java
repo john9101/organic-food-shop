@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ApiFailureResponse apiFailureResponse = ApiFailureResponse.builder()
-                .timestamp(LocalDateTime.now())
+//                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .message(authException.getMessage())

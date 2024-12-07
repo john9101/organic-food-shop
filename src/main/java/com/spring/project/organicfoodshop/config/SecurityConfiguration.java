@@ -27,12 +27,13 @@ public class SecurityConfiguration{
             "/auth/login",
             "/auth/logout",
             "/auth/register",
-            "/auth/refresh",
-            "/management/roles"
+            "/auth/activate"
     };
 
     private static final String[] AUTHENTICATED_ENDPOINTS = {
-            "/user/profile",
+            "/auth/account",
+            "/users/profile",
+            "/carts/**"
     };
 
     @Bean
@@ -56,8 +57,10 @@ public class SecurityConfiguration{
                                 .anyRequest().permitAll())
                 .oauth2ResourceServer(oAuth2ResourceServerConfigurer -> oAuth2ResourceServerConfigurer
                         .jwt(Customizer.withDefaults())
+//                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
@@ -71,6 +74,14 @@ public class SecurityConfiguration{
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
+//    @Bean
+//    public AuthenticationManager authorizationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+//        CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(userDetailsService, passwordEncoder);
+//        ProviderManager providerManager = new ProviderManager(customAuthenticationProvider);
+//        providerManager.setEraseCredentialsAfterAuthentication(false);
+//        return providerManager;
+//    }
 
     @Bean
     public AuthenticationManager authorizationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
