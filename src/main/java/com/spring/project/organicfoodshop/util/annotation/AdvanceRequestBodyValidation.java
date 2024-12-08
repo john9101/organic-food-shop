@@ -11,7 +11,8 @@ import java.lang.annotation.*;
         AdvanceCreateUserValidator.class,
         AdvanceCreateBrandValidator.class,
         AdvanceCreateProductValidator.class,
-        AdvanceCreateCategoryValidator.class
+        AdvanceCreateCategoryValidator.class,
+        AdvanceAddToCartValidator.class,
 })
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

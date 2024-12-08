@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> , JpaSpecificationExecutor<Product>, BaseRepository<Product, Long> {
     boolean existsByName(String name);
     Page<Product> findAllByCategoriesIn(Set<Category> categories, Pageable pageable);
-    Product findBySlug(String slug);
+
+    Optional<Product> findBySlug(String slug);
+//    Product findBySlug(String slug);
 }

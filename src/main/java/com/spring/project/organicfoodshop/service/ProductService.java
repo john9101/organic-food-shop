@@ -4,6 +4,9 @@ import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.domain.Product;
 import com.spring.project.organicfoodshop.repository.CategoryRepository;
 import com.spring.project.organicfoodshop.repository.ProductRepository;
+import com.spring.project.organicfoodshop.util.FormatExceptionMessageUtil;
+import com.spring.project.organicfoodshop.util.constant.TargetSubjectEnum;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,14 +30,21 @@ public class ProductService {
     }
 
     public Product getProductBySlug(String slug) {
-        return productRepository.findBySlug(slug);
+//        return productRepository.findBySlug(slug);
+        return productRepository.findBySlug(slug).orElseThrow(()
+                -> new EntityNotFoundException(FormatExceptionMessageUtil.decorateNotFoundEntityMessage("slug", slug, TargetSubjectEnum.PRODUCT)));
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findByIdOrThrow(id);
+        return productRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(FormatExceptionMessageUtil.decorateNotFoundEntityMessage("id", id, TargetSubjectEnum.PRODUCT)));
     }
 
     public boolean isExistsProductByName(String name) {
         return productRepository.existsByName(name);
+    }
+
+    public boolean isExistsProductById(Long id) {
+        return productRepository.existsById(id);
     }
 }

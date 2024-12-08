@@ -62,7 +62,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private String avatar;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
     @PrePersist

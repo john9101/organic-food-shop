@@ -12,7 +12,7 @@ public class UserServiceValidator {
 
     public boolean validateEmailAndUsername(String email, String username, ConstraintValidatorContext constraintValidatorContext) {
         boolean valid = true;
-        if(userService.getUserByEmail(email, false) != null) {
+        if(userService.ixExistsUserByEmail(email)) {
             constraintValidatorContext
                     .buildConstraintViolationWithTemplate("This email has been registered by another account")
                     .addPropertyNode("email")
@@ -21,7 +21,7 @@ public class UserServiceValidator {
             valid = false;
         }
 
-        if (userService.getUserByUsername(username).isPresent()) {
+        if (userService.isExistsUserByUsername(username)) {
             constraintValidatorContext
                     .buildConstraintViolationWithTemplate("This username has been registered by another account")
                     .addPropertyNode("username")

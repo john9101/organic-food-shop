@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum TargetSubjectEnum {
-    ACCOUNT("Tài khoản"),
-    PRODUCT("Sản phẩm");
+    ACCOUNT("tài khoản"),
+    PRODUCT("sản phẩm");
 
     private final String displayName;
 

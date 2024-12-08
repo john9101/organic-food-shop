@@ -46,9 +46,6 @@ public class ProductController {
     @ApiRequestMessage("Call get detail information of product API request")
     public ResponseEntity<GotDetailInfoProductResponse> getDetailInfoOfProduct(@PathVariable("slug") String slug) {
         Product product = productService.getProductBySlug(slug);
-        if (product == null) {
-            throw new EntityNotFoundException("Product not found with slug: " + slug);
-        }
         GotDetailInfoProductResponse.ProductBrandInfo brandInfo = BrandMapper.INSTANCE.toProductBrandInfo(product.getBrand());
         Set<GotDetailInfoProductResponse.ProductCategoryInfo> categoryInfos  = product.getCategories().stream().map(CategoryMapper.INSTANCE::toProductCategoryInfo).collect(Collectors.toSet());
         GotDetailInfoProductResponse gotDetailInfoOfProductResponse = ProductMapper.INSTANCE.toGotDetailInfoProductResponse(product);

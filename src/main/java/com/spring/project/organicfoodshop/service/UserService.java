@@ -3,7 +3,7 @@ package com.spring.project.organicfoodshop.service;
 import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
 import com.spring.project.organicfoodshop.repository.UserRepository;
-import com.spring.project.organicfoodshop.util.FormatErrorContentUtil;
+import com.spring.project.organicfoodshop.util.FormatExceptionMessageUtil;
 import com.spring.project.organicfoodshop.util.SecurityUtil;
 import com.spring.project.organicfoodshop.util.constant.TargetSubjectEnum;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,17 +25,21 @@ public class UserService {
         return userRepository.findByIdOrThrow(id);
     }
 
-    public User getUserByEmail(String email, boolean isAcceptThrowFailedAuthentication) {
-        String notFoundExceptionMessage = FormatErrorContentUtil.decorateNotFoundEntityErrorContent("email", email, TargetSubjectEnum.ACCOUNT);
+    public User getUserByEmail(String email, boolean isAcceptThrowAuthenticationException) {
+        String exceptionMessage = FormatExceptionMessageUtil.decorateNotFoundEntityMessage("email", email, TargetSubjectEnum.ACCOUNT);
         return userRepository.findByEmail(email).orElseThrow(() ->
-                isAcceptThrowFailedAuthentication ?
-                        new UsernameNotFoundException(notFoundExceptionMessage) :
-                        new EntityNotFoundException(notFoundExceptionMessage)
+                isAcceptThrowAuthenticationException ?
+                        new UsernameNotFoundException(exceptionMessage) :
+                        new EntityNotFoundException(exceptionMessage)
         );
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Boolean ixExistsUserByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public Boolean isExistsUserByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     public Set<User> getAllUsersById(Set<Long> ids) {

@@ -31,8 +31,8 @@ public class SecurityConfiguration{
     };
 
     private static final String[] AUTHENTICATED_ENDPOINTS = {
-            "/auth/account",
-            "/users/profile",
+            "/auth/introspect",
+            "/accounts/**",
             "/carts/**"
     };
 

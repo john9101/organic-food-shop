@@ -1,13 +1,8 @@
 package com.spring.project.organicfoodshop.config;
 
-import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
 //import com.spring.project.organicfoodshop.domain.response.auth.InitializedPrincipalResponse;
-import com.spring.project.organicfoodshop.domain.response.auth.LoggedInResponse;
 import com.spring.project.organicfoodshop.service.UserService;
-import com.spring.project.organicfoodshop.service.mapper.UserMapper;
-import com.spring.project.organicfoodshop.util.FormatErrorContentUtil;
-import com.spring.project.organicfoodshop.util.constant.TargetSubjectEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,14 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Getter

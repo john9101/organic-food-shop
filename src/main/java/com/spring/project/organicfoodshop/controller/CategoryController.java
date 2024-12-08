@@ -47,7 +47,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{slug}")
-    @ApiRequestMessage("Call get all products of category API request")
+    @ApiRequestMessage("Call get products of category with pagination API request")
     public ResponseEntity<PagedResponse<ProductItemResponse>> getProductsOfCategoryWithPagination(@RequestParam Map<String, String> queryStringMap, @PathVariable String slug) {
         GetProductItemsRequest getProductItemsRequest = objectMapper.convertValue(queryStringMap, GetProductItemsRequest.class);
         Sort sortStrategy = Sort.unsorted();

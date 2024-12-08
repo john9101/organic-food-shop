@@ -5,24 +5,24 @@ import com.spring.project.organicfoodshop.domain.CartItem;
 import com.spring.project.organicfoodshop.domain.Product;
 import com.spring.project.organicfoodshop.domain.User;
 import com.spring.project.organicfoodshop.domain.request.common.cart.AddToCartRequest;
-import com.spring.project.organicfoodshop.domain.response.common.cart.AddedToCartResponse;
+import com.spring.project.organicfoodshop.domain.response.common.cart.IntrospectedOrAddedToCartResponse;
+import com.spring.project.organicfoodshop.domain.response.common.cart.ExtractedCartItemResponse;
 import com.spring.project.organicfoodshop.service.CartService;
 import com.spring.project.organicfoodshop.service.ProductService;
 import com.spring.project.organicfoodshop.service.UserService;
 import com.spring.project.organicfoodshop.service.mapper.CartItemMapper;
-import com.spring.project.organicfoodshop.service.mapper.CartMapper;
 import com.spring.project.organicfoodshop.util.SecurityUtil;
 import com.spring.project.organicfoodshop.util.annotation.ApiRequestMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,31 +34,49 @@ public class CartController {
 
     @PostMapping
     @ApiRequestMessage("Call add to cart API request")
-    public ResponseEntity<AddedToCartResponse> addToCart(@RequestBody AddToCartRequest addToCartRequest) {
-        CartItem cartItem = CartItemMapper.INSTANCE.toCartItem(addToCartRequest);
+    public ResponseEntity<IntrospectedOrAddedToCartResponse> addToCart(@Valid @RequestBody AddToCartRequest addToCartRequest) {
+        CartItem initCartItem = CartItemMapper.INSTANCE.toCartItem(addToCartRequest);
         Product product = productService.getProductById(addToCartRequest.getProductId());
-        String email = SecurityUtil.getCurrentUserPrincipal().orElse(null);
-        User user = userService.getUserByUsername(email).orElseThrow();
-        Cart cart = user.getCart();
+        Cart cart = getUserCart();
         Set<CartItem> cartItems = cart.getCartItems();
-
         Optional<CartItem> optionalCartItem = cartItems.stream()
-                .filter(item -> item.getProduct().getId().equals(product.getId())).findFirst();
+                .filter(cartItem -> Objects.equals(cartItem.getProduct().getId(), product.getId()))
+                .findFirst();
         if (optionalCartItem.isPresent()) {
-            cartItem = optionalCartItem.get();
-            cartItem.setQuantity(cartItem.getQuantity() + addToCartRequest.getQuantity());
+            initCartItem = optionalCartItem.get();
+            initCartItem.setQuantity(initCartItem.getQuantity() + addToCartRequest.getQuantity());
         }else {
-            cartItem.setProduct(product);
-            cartItem.setCart(cart);
-            cartItems.add(cartItem);
+            initCartItem.setProduct(product);
+            initCartItem.setCart(cart);
+            cartItems.add(initCartItem);
         }
         cart = cartService.handleSaveCart(cart);
-        AddedToCartResponse addedToCartResponse = CartMapper.INSTANCE.toAddedToCartResponse(cart);
-        addedToCartResponse.setCartId(cart.getId());
-        addedToCartResponse.setCartItemId(cartItem.getId());
-        addedToCartResponse.setProductId(product.getId());
-        addedToCartResponse.setProductName(product.getName());
-        addedToCartResponse.setQuantity(cartItem.getQuantity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedToCartResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(getIntrospectedOrAddedToCartResponse(cart));
+    }
+
+    @GetMapping("/introspect")
+    @ApiRequestMessage("Call introspect cart API request")
+    public ResponseEntity<IntrospectedOrAddedToCartResponse> introspectCart() {
+        Cart cart = getUserCart();
+        return ResponseEntity.ok(getIntrospectedOrAddedToCartResponse(cart));
+    }
+
+    private Cart getUserCart(){
+        String email = SecurityUtil.getCurrentUserPrincipal().orElse(null);
+        User user = userService.getUserByEmail(email, false);
+        return user.getCart();
+    }
+
+    private IntrospectedOrAddedToCartResponse getIntrospectedOrAddedToCartResponse(Cart cart) {
+        Set<ExtractedCartItemResponse> cartItemInfos = cart.getCartItems().stream()
+                .map(cartItem -> ExtractedCartItemResponse.builder()
+                        .productId(cartItem.getProduct().getId())
+                        .productName(cartItem.getProduct().getName())
+                        .quantity(cartItem.getQuantity())
+                        .productSlug(cartItem.getProduct().getSlug())
+                        .productThumbnail(cartItem.getProduct().getImageUrls().stream().findFirst().orElse(null))
+                        .build())
+                .collect(Collectors.toSet());
+        return IntrospectedOrAddedToCartResponse.builder().cartId(cart.getId()).cartItemInfos(cartItemInfos).build();
     }
 }
