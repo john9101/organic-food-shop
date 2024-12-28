@@ -1,7 +1,8 @@
 package com.spring.project.organicfoodshop.domain;
 
-import com.spring.project.organicfoodshop.util.constant.SellingUnitTypeEnum;
-import com.spring.project.organicfoodshop.util.constant.MeasurementUnitTypeEnum;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
+import com.spring.project.organicfoodshop.util.constant.SellingUnitEnum;
+import com.spring.project.organicfoodshop.util.constant.MeasurementUnitEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,10 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
     private String slug;
@@ -26,19 +31,23 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     private String longDescription;
 
+    private String title;
+
 //    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private Set<ProductWeight> productWeights = new HashSet<>();
 
 //    @Convert(converter = SellingUnitTypeEnum.class)
     @Enumerated(EnumType.STRING)
-    private SellingUnitTypeEnum sellingUnit;
+    private SellingUnitEnum sellingUnit;
 
     @Enumerated(EnumType.STRING)
-    private MeasurementUnitTypeEnum measurementUnit;
+    private MeasurementUnitEnum measurementUnit;
 
     private Double measurementValue;
 
-    private Double sellingPrice;
+    private Double regularPrice;
+
+    private Double discountPrice;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ProductEvent> productEvents;
@@ -63,13 +72,20 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     private Integer quantityInStock;
 
-    private Double priceUseForSort;
-
     private Double discountPercentEvent;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CartItem> cartItems;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Comment> comments;
+
+
+    @PrePersist
+    private void prePersistProduct() {
+        this.title = FormatterUtil.formatProductTitle(this.name, this.sellingUnit, this.measurementValue, this.measurementUnit);
+        this.visible = true;
+    }
 //    @PrePersist
 //    public void handlePersistProduct() {
 //        this.visible = true;

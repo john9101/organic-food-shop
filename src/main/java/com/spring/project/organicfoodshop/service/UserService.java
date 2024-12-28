@@ -3,9 +3,9 @@ package com.spring.project.organicfoodshop.service;
 import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
 import com.spring.project.organicfoodshop.repository.UserRepository;
-import com.spring.project.organicfoodshop.util.FormatExceptionMessageUtil;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
 import com.spring.project.organicfoodshop.util.SecurityUtil;
-import com.spring.project.organicfoodshop.util.constant.TargetSubjectEnum;
+import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User getUserByEmail(String email, boolean isAcceptThrowAuthenticationException) {
-        String exceptionMessage = FormatExceptionMessageUtil.decorateNotFoundEntityMessage("email", email, TargetSubjectEnum.ACCOUNT);
+        String exceptionMessage = FormatterUtil.formateExistExceptionMessage("email", email, ModuleEnum.ACCOUNT);
         return userRepository.findByEmail(email).orElseThrow(() ->
                 isAcceptThrowAuthenticationException ?
                         new UsernameNotFoundException(exceptionMessage) :

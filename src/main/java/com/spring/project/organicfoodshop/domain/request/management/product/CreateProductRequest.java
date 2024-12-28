@@ -1,8 +1,8 @@
 package com.spring.project.organicfoodshop.domain.request.management.product;
 
 import com.spring.project.organicfoodshop.util.annotation.AdvanceRequestBodyValidation;
-import com.spring.project.organicfoodshop.util.constant.MeasurementUnitTypeEnum;
-import com.spring.project.organicfoodshop.util.constant.SellingUnitTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.MeasurementUnitEnum;
+import com.spring.project.organicfoodshop.util.constant.SellingUnitEnum;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,12 +35,12 @@ public class CreateProductRequest {
     private Double measurementValue;
 
     @NotBlank(message = "Measurement unit can not be blank")
-    private MeasurementUnitTypeEnum measurementUnit;
+    private MeasurementUnitEnum measurementUnit;
 
     @NotNull(message = "Selling price can not be null")
     private Double sellingPrice;
 
-    private SellingUnitTypeEnum sellingUnit;
+    private SellingUnitEnum sellingUnit;
 
     @NotNull(message = "Quantity in stock can not be null")
     @Min(value = 1, message = "Quantity in stock must be greater than or equal 1")

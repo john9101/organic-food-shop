@@ -33,7 +33,5 @@ public class CreateUserRequest {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    private Set<Long> roleIds;
-
     private String avatar;
 }

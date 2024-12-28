@@ -23,10 +23,6 @@ public abstract class AbstractAuditingEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @CreatedDate
     @JsonProperty("created_at")
     @Column(name = "created_at", updatable = false)

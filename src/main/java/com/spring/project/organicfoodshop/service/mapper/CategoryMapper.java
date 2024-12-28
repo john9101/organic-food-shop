@@ -2,10 +2,12 @@ package com.spring.project.organicfoodshop.service.mapper;
 
 import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.domain.request.management.category.CreateCategoryRequest;
+import com.spring.project.organicfoodshop.domain.response.common.product.GotProductDetailResponse;
 import com.spring.project.organicfoodshop.domain.response.management.category.CreatedCategoryResponse;
-import com.spring.project.organicfoodshop.domain.response.common.product.GotDetailInfoProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
@@ -16,5 +18,5 @@ public interface CategoryMapper {
 
     CreatedCategoryResponse toCreatedCategoryResponse(Category category);
 
-    GotDetailInfoProductResponse.ProductCategoryInfo toProductCategoryInfo(Category category);
+    Set<GotProductDetailResponse.CategoryInfo> toCategoryInfos(Set<Category> categories);
 }

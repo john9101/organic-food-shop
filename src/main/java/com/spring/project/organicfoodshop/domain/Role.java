@@ -2,7 +2,7 @@ package com.spring.project.organicfoodshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.project.organicfoodshop.util.constant.RoleTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,12 +16,15 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role extends AbstractAuditingEntity implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Enumerated(EnumType.STRING)
-    private RoleTypeEnum name;
+    private RoleEnum name;
 
     private String description;
 

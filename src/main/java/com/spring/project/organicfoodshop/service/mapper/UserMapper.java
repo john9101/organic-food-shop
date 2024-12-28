@@ -6,6 +6,8 @@ import com.spring.project.organicfoodshop.domain.request.management.user.CreateU
 import com.spring.project.organicfoodshop.domain.response.auth.IntrospectedResponse;
 import com.spring.project.organicfoodshop.domain.response.auth.LoggedInResponse;
 import com.spring.project.organicfoodshop.domain.response.auth.RegisteredResponse;
+import com.spring.project.organicfoodshop.domain.response.management.user.CreatedUserResponse;
+import com.spring.project.organicfoodshop.domain.response.management.user.EditedUserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -20,8 +22,11 @@ public interface UserMapper {
 
     RegisteredResponse toRegisterResponse(User user);
 
-//    LoggedInResponse.InitializedPrincipal toInitializedPrincipal(User user);
-
     LoggedInResponse.UserInfo toLoggedInUserInfo(User user);
+
     IntrospectedResponse.UserInfo toIntrospectedUserInfo(User user);
+
+    CreatedUserResponse toCreatedUserResponse(User user);
+
+    EditedUserResponse toEditedUserResponse(User user);
 }

@@ -1,24 +1,24 @@
 package com.spring.project.organicfoodshop.util.converter;
 
-import com.spring.project.organicfoodshop.util.constant.SellingUnitTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.SellingUnitEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class SellingUnitTypeConverter implements AttributeConverter<SellingUnitTypeEnum, String> {
+public class SellingUnitTypeConverter implements AttributeConverter<SellingUnitEnum, String> {
     @Override
-    public String convertToDatabaseColumn(SellingUnitTypeEnum sellingUnitTypeEnum) {
-        return sellingUnitTypeEnum != null ? sellingUnitTypeEnum.getDisplayName() : null;
+    public String convertToDatabaseColumn(SellingUnitEnum sellingUnitTypeEnum) {
+        return sellingUnitTypeEnum != null ? sellingUnitTypeEnum.getName() : null;
     }
 
     @Override
-    public SellingUnitTypeEnum convertToEntityAttribute(String sellingUnitNameDb) {
+    public SellingUnitEnum convertToEntityAttribute(String sellingUnitNameDb) {
         if (sellingUnitNameDb == null) {
             return null;
         }
 
-        for (SellingUnitTypeEnum sellingUnitTypeEnum : SellingUnitTypeEnum.values()) {
-            if (sellingUnitTypeEnum.getDisplayName().equals(sellingUnitNameDb)) {
+        for (SellingUnitEnum sellingUnitTypeEnum : SellingUnitEnum.values()) {
+            if (sellingUnitTypeEnum.getName().equals(sellingUnitNameDb)) {
                 return sellingUnitTypeEnum;
             }
         }

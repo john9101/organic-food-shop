@@ -2,8 +2,8 @@ package com.spring.project.organicfoodshop.service.mapper;
 
 import com.spring.project.organicfoodshop.domain.Brand;
 import com.spring.project.organicfoodshop.domain.request.management.brand.CreateBrandRequest;
+import com.spring.project.organicfoodshop.domain.response.common.product.GotProductDetailResponse;
 import com.spring.project.organicfoodshop.domain.response.management.brand.CreatedBrandResponse;
-import com.spring.project.organicfoodshop.domain.response.common.product.GotDetailInfoProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -16,5 +16,5 @@ public interface BrandMapper {
 
     CreatedBrandResponse toCreatedBrandResponse(Brand brand);
 
-    GotDetailInfoProductResponse.ProductBrandInfo toProductBrandInfo(Brand brand);
+    GotProductDetailResponse.BrandInfo toBrandInfo(Brand brand);
 }

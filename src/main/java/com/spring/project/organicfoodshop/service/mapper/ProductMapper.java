@@ -2,11 +2,13 @@ package com.spring.project.organicfoodshop.service.mapper;
 
 import com.spring.project.organicfoodshop.domain.Product;
 import com.spring.project.organicfoodshop.domain.request.management.product.CreateProductRequest;
+import com.spring.project.organicfoodshop.domain.response.common.pagination.PagedResponse;
+import com.spring.project.organicfoodshop.domain.response.common.product.GotProductDetailResponse;
 import com.spring.project.organicfoodshop.domain.response.management.product.CreatedProductResponse;
-import com.spring.project.organicfoodshop.domain.response.common.product.ProductItemResponse;
-import com.spring.project.organicfoodshop.domain.response.common.product.GotDetailInfoProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
@@ -16,7 +18,7 @@ public interface ProductMapper {
 
     CreatedProductResponse toCreatedProductResponse(Product product);
 
-    ProductItemResponse toGotProductItemContentResponse(Product product);
+    GotProductDetailResponse toGotProductDetailResponse(Product product);
 
-    GotDetailInfoProductResponse toGotDetailInfoProductResponse(Product product);
+    List<PagedResponse.ProductItem> toProductItems(List<Product> products);
 }

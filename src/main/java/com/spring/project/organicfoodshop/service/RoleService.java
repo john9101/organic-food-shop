@@ -2,11 +2,10 @@ package com.spring.project.organicfoodshop.service;
 
 import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.repository.RoleRepository;
-import com.spring.project.organicfoodshop.util.constant.RoleTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -30,7 +29,7 @@ public class RoleService {
         return Set.copyOf(roleRepository.findAllById(ids));
     }
 
-    public Role getRoleByName(RoleTypeEnum roleTypeEnum) {
+    public Role getRoleByName(RoleEnum roleTypeEnum) {
         return roleRepository.findByName(roleTypeEnum);
     }
 }

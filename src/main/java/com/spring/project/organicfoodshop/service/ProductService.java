@@ -1,28 +1,26 @@
 package com.spring.project.organicfoodshop.service;
 
-import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.domain.Product;
-import com.spring.project.organicfoodshop.repository.CategoryRepository;
 import com.spring.project.organicfoodshop.repository.ProductRepository;
-import com.spring.project.organicfoodshop.util.FormatExceptionMessageUtil;
-import com.spring.project.organicfoodshop.util.constant.TargetSubjectEnum;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
+import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+//    private final CategoryRepository categoryRepository;
 
-    public Page<Product> getAllProductsOfCategoryWithPageable(String slug, Pageable pageable) {
-        Category category = categoryRepository.findBySlug(slug);
-        return productRepository.findAllByCategoriesIn(Collections.singleton(category), pageable);
+    public Page<Product> getProductsOfCategory(String slug, Pageable pageable, Specification<Product> productSpecification) {
+        Specification<Product> specification = (root, query, cb) -> cb.equal(root.join("categories").get("slug"), slug);
+        Specification<Product> combineSpecification = Specification.where(specification).and(productSpecification);
+        return productRepository.findAll(combineSpecification, pageable);
     }
 
     public Product handleSaveProduct(Product product) {
@@ -30,14 +28,13 @@ public class ProductService {
     }
 
     public Product getProductBySlug(String slug) {
-//        return productRepository.findBySlug(slug);
         return productRepository.findBySlug(slug).orElseThrow(()
-                -> new EntityNotFoundException(FormatExceptionMessageUtil.decorateNotFoundEntityMessage("slug", slug, TargetSubjectEnum.PRODUCT)));
+                -> new EntityNotFoundException(FormatterUtil.formatNotFoundExceptionMessage("slug", slug, ModuleEnum.PRODUCT)));
     }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(FormatExceptionMessageUtil.decorateNotFoundEntityMessage("id", id, TargetSubjectEnum.PRODUCT)));
+                new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.PRODUCT)));
     }
 
     public boolean isExistsProductByName(String name) {

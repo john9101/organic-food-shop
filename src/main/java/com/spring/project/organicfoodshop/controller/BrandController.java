@@ -23,10 +23,10 @@ public class BrandController {
 
     @PostMapping
     @ApiRequestMessage("Call create brand API request")
-    public ResponseEntity<CreatedBrandResponse> createBrand(@Valid @RequestBody CreateBrandRequest createBrandRequest) {
-        Brand brand = BrandMapper.INSTANCE.toBrand(createBrandRequest);
+    public ResponseEntity<CreatedBrandResponse> createBrand(@Valid @RequestBody CreateBrandRequest request) {
+        Brand brand = BrandMapper.INSTANCE.toBrand(request);
         brand = brandService.handleSaveBrand(brand);
-        CreatedBrandResponse createdBrandResponse = BrandMapper.INSTANCE.toCreatedBrandResponse(brand);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBrandResponse);
+        CreatedBrandResponse response = BrandMapper.INSTANCE.toCreatedBrandResponse(brand);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

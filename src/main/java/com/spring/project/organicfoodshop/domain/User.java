@@ -2,9 +2,7 @@ package com.spring.project.organicfoodshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.spring.project.organicfoodshop.repository.CartRepository;
-import com.spring.project.organicfoodshop.util.RandomUtil;
-import com.spring.project.organicfoodshop.util.constant.GenderTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.GenderEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +21,12 @@ import java.util.UUID;
 //})
 @Table(name = "users")
 public class User extends AbstractAuditingEntity implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String username;
 
@@ -37,7 +38,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Integer age;
 
     @Enumerated(EnumType.STRING)
-    private GenderTypeEnum gender;
+    private GenderEnum gender;
 
     private String email;
 
@@ -62,9 +63,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private String avatar;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Order> orders;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Comment> comments;
 
     @PrePersist
     protected void onPrePersistUser() {

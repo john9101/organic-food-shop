@@ -1,7 +1,7 @@
 package com.spring.project.organicfoodshop.util.exception;
 import com.spring.project.organicfoodshop.domain.response.api.ApiFailureResponse;
 import com.spring.project.organicfoodshop.util.annotation.ApiRequestMessage;
-import com.spring.project.organicfoodshop.util.constant.ErrorTypeEnum;
+import com.spring.project.organicfoodshop.util.constant.ErrorEnum;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .error(Collections.singletonList(error))
                 .message(formatFailedMessageFromRequest(request))
-                .type(ErrorTypeEnum.UNAUTHORIZED.name())
+                .type(ErrorEnum.Unauthorized.name())
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiFailureResponse);
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
                 .status(methodArgumentNotValidException.getStatusCode().value())
                 .error(error)
                 .message(formatFailedMessageFromRequest(request))
-                .type(ErrorTypeEnum.VALIDATION.name())
+                .type(ErrorEnum.Validation.name())
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.badRequest().body(apiFailureResponse);
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
                 .status(noResourceFoundException.getStatusCode().value())
                 .error(noResourceFoundException.getMessage())
                 .message("404 not found, URL may be not exist")
-                .type(ErrorTypeEnum.NOT_FOUND.name())
+                .type(ErrorEnum.Notfound.name())
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiFailureResponse);
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(entityNotFoundException.getMessage())
                 .message(formatFailedMessageFromRequest(request))
-                .type(ErrorTypeEnum.NOT_FOUND.name())
+                .type(ErrorEnum.Notfound.name())
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiFailureResponse);
@@ -110,13 +110,13 @@ public class GlobalExceptionHandler {
 
     private String formatFailedMessageFromRequest(HttpServletRequest request){
         Object handler = request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
-        String message = "Call API";
+        String message = "Call API request";
         if (handler instanceof HandlerMethod handlerMethod) {
             ApiRequestMessage apiRequestMessage = handlerMethod.getMethodAnnotation(ApiRequestMessage.class);
             if (apiRequestMessage != null) {
                 message = apiRequestMessage.value();
             }
         }
-        return message + " failed";
+        return message.concat(" failed");
     }
 }
