@@ -21,11 +21,11 @@ public class PaymentController {
     @GetMapping("/vnp-return")
     public void handleVNPReturn(@RequestParam Map<String, String> vnpParams, HttpServletResponse response) throws IOException {
         boolean isPaymentSuccessful = vnPayService.verifyPayment(vnpParams);
-        String redirectUrl;
+        String redirectUrl = "http://localhost:5173/order-result?id=" + vnpParams.get("vnp_TxnRef");
         if (isPaymentSuccessful) {
-            redirectUrl = "https://frontend.example.com/payment-success?orderId=" + vnpParams.get("vnp_TxnRef");
+            redirectUrl += "&status=success";
         } else {
-            redirectUrl = "https://frontend.example.com/payment-failed?orderId=" + vnpParams.get("vnp_TxnRef");
+            redirectUrl += "&status=failed";
         }
         response.sendRedirect(redirectUrl);
     }

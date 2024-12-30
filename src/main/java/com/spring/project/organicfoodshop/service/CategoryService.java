@@ -2,6 +2,9 @@ package com.spring.project.organicfoodshop.service;
 
 import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.repository.CategoryRepository;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
+import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +22,9 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Category getCategoryByIdOrThrow(Long id) {
-        return categoryRepository.findByIdOrThrow(id);
-    }
-
-    public Optional<Category> getCategoryById(Long id){
-        return categoryRepository.findById(id);
-    }
-
-    public Category getCategoryBySlug(String slug) {
-        return categoryRepository.findBySlug(slug);
+    public Category getCategoryById(Long id){
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.CATEGORY)));
     }
 
     public Category getCategoryByName(String name) {
@@ -37,5 +33,9 @@ public class CategoryService {
 
     public Set<Category> getAllCategoriesById(Set<Long> ids) {
         return Set.copyOf(categoryRepository.findAllById(ids));
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

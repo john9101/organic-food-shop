@@ -115,7 +115,6 @@ public class CartController {
                 .subtotal(calculateSubtotal(cartItem.getQuantity(), price))
                 .productId(product.getId())
                 .productTitle(product.getTitle())
-                .productSlug(product.getSlug())
                 .productThumbnail(ProductUtil.getProductThumnnail(product))
                 .build();
     }

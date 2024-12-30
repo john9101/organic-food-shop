@@ -22,22 +22,8 @@ public class Category extends AbstractAuditingEntity implements Serializable {
 
     private String name;
 
-    private String slug;
+    private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parentCategory;
-
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private Set<Category> childCategories;
-
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Product> products;
-
-    private Boolean visible;
-
-    @PrePersist
-    protected void handlePrePersistCategory() {
-        this.visible = true;
-    }
 }

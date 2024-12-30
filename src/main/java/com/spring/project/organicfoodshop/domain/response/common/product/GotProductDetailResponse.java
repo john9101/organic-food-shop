@@ -1,11 +1,12 @@
 package com.spring.project.organicfoodshop.domain.response.common.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spring.project.organicfoodshop.util.constant.MeasurementUnitEnum;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
+@Builder
 @Getter
 @Setter
 public class GotProductDetailResponse {
@@ -13,10 +14,7 @@ public class GotProductDetailResponse {
 
     private String title;
 
-    private String slug;
-
-    @JsonProperty("image_urls")
-    private Set<String> imageUrls;
+    private String name;
 
     @JsonProperty("short_description")
     private String shortDescription;
@@ -30,31 +28,21 @@ public class GotProductDetailResponse {
     @JsonProperty("discount_price")
     private Double discountPrice;
 
-    @JsonProperty("discount_percent_event")
-    private Double discountPercentEvent;
+    @JsonProperty("discount_percent")
+    private Double discountPercent;
 
     @JsonProperty("out_of_stock")
     private Boolean outOfStock;
 
-    @JsonProperty("brand_info")
-    private BrandInfo brandInfo;
+    @JsonProperty("measurement_unit_mame")
+    private String measurementUnitName;
 
-    @JsonProperty("category_infos")
-    private Set<CategoryInfo> categoryInfos;
+    @JsonProperty("measurement_value")
+    private Double measurementValue;
 
-    @Getter
-    @Setter
-    public static class BrandInfo{
-        private String name;
+    @JsonProperty("brand_name")
+    private String brandName;
 
-        @JsonProperty("image_url")
-        private String imageUrl;
-    }
-
-    @Getter
-    @Setter
-    public static class CategoryInfo{
-        private String name;
-        private String slug;
-    }
+    @JsonProperty("category_name")
+    private String categoryName;
 }

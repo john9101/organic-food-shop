@@ -6,14 +6,12 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
+@Entity
+@Table(name = "addresses")
 @Getter
 @Setter
-@Entity
-@Table(name = "brands")
-public class Brand extends AbstractAuditingEntity implements Serializable {
+public class Address extends AbstractAuditingEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -21,10 +19,15 @@ public class Brand extends AbstractAuditingEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private String description;
+    private String specificPlace;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Product> products;
+    private String province;
+
+    private String district;
+
+    private String commune;
 }

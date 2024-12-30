@@ -1,34 +1,66 @@
 package com.spring.project.organicfoodshop.controller;
 
+import com.spring.project.organicfoodshop.domain.Address;
+import com.spring.project.organicfoodshop.domain.Cart;
+import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
-import com.spring.project.organicfoodshop.domain.request.management.user.CreateUserRequest;
+import com.spring.project.organicfoodshop.domain.request.management.user.AddCustomerRequest;
+import com.spring.project.organicfoodshop.domain.request.management.user.AddEmployeeRequest;
 import com.spring.project.organicfoodshop.domain.request.management.user.EditUserRequest;
-import com.spring.project.organicfoodshop.domain.response.management.user.CreatedUserResponse;
-import com.spring.project.organicfoodshop.domain.response.management.user.EditedUserResponse;
+import com.spring.project.organicfoodshop.domain.response.management.user.*;
+import com.spring.project.organicfoodshop.service.CartService;
+import com.spring.project.organicfoodshop.service.RoleService;
 import com.spring.project.organicfoodshop.service.UserService;
 import com.spring.project.organicfoodshop.service.mapper.UserMapper;
 import com.spring.project.organicfoodshop.util.annotation.ApiRequestMessage;
 import com.spring.project.organicfoodshop.util.constant.GenderEnum;
+import com.spring.project.organicfoodshop.util.constant.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping
-    @ApiRequestMessage("Call create a user API request")
-    public ResponseEntity<CreatedUserResponse> createUser(@RequestBody CreateUserRequest request) {
+    @PostMapping("/customers")
+    @ApiRequestMessage("Call add customer API request")
+    public ResponseEntity<AddedCustomerResponse> addCustomer(@RequestBody AddCustomerRequest request) {
+        var ref = new Object() {
+            User user = UserMapper.INSTANCE.toUser(request);
+        };
+        ref.user.setPassword(passwordEncoder.encode(ref.user.getPassword()));
+        Role role = roleService.getRoleByName(RoleEnum.CUSTOMER);
+        request.getAddresses().forEach(address -> address.setUser(ref.user));
+        Cart cart = new Cart();
+        cart.setUser(ref.user);
+        ref.user.setAddresses(request.getAddresses());
+        ref.user.setRoles(Collections.singleton(role));
+        ref.user.setAddresses(request.getAddresses());
+        ref.user.setCart(cart);
+        ref.user = userService.handleSaveUser(ref.user);
+        AddedCustomerResponse response = UserMapper.INSTANCE.toAddedCustomerResponse(ref.user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/employees")
+    @ApiRequestMessage("Call add employee API request")
+    public ResponseEntity<AddedEmployeeResponse> addEmployee(@RequestBody AddEmployeeRequest request) {
         User user = UserMapper.INSTANCE.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role role = roleService.getRoleByName(RoleEnum.EMPLOYEE);
+        user.getRoles().add(role);
         user = userService.handleSaveUser(user);
-        CreatedUserResponse response = UserMapper.INSTANCE.toCreatedUserResponse(user);
+        AddedEmployeeResponse response = UserMapper.INSTANCE.toAddedEmployeeResponse(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -44,4 +76,23 @@ public class UserController {
         EditedUserResponse response = UserMapper.INSTANCE.toEditedUserResponse(user);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/customers")
+    @ApiRequestMessage("Call get all customers API request")
+    public ResponseEntity<GotAllCustomersResponse> getAllCustomers() {
+        List<User> customers = userService.getAllCustomers();
+        List<GotAllCustomersResponse.Item> items = UserMapper.INSTANCE.toAllCustomerItems(customers);
+        GotAllCustomersResponse response = GotAllCustomersResponse.builder().items(items).build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/employees")
+    @ApiRequestMessage("Call get all employees API request")
+    public ResponseEntity<GotAllEmployeesResponse> getAllEmployees() {
+        List<User> employees = userService.getAllEmployees();
+        List<GotAllEmployeesResponse.Item> items = UserMapper.INSTANCE.toAllEmployeeItems(employees);
+        GotAllEmployeesResponse response = GotAllEmployeesResponse.builder().items(items).build();
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -40,9 +40,6 @@ public class GotCartSummaryResponse {
         @JsonProperty("product_title")
         private String productTitle;
 
-        @JsonProperty("product_slug")
-        private String productSlug;
-
         @JsonProperty("product_thumbnail")
         private String productThumbnail;
     }

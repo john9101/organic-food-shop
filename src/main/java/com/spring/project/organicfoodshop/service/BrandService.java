@@ -5,6 +5,7 @@ import com.spring.project.organicfoodshop.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,5 +23,9 @@ public class BrandService {
 
     public Optional<Brand> getBrandById(Long id) {
         return brandRepository.findById(id);
+    }
+
+    public List<Brand> getAllBrands() {
+        return brandRepository.findAll();
     }
 }

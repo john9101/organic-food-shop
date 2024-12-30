@@ -1,6 +1,6 @@
 package com.spring.project.organicfoodshop.service.validator;
 
-import com.spring.project.organicfoodshop.domain.request.management.product.CreateProductRequest;
+import com.spring.project.organicfoodshop.domain.request.management.product.AddProductRequest;
 import com.spring.project.organicfoodshop.service.ProductService;
 import com.spring.project.organicfoodshop.util.annotation.AdvanceRequestBodyValidation;
 import jakarta.validation.ConstraintValidator;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AdvanceCreateProductValidator implements ConstraintValidator<AdvanceRequestBodyValidation, CreateProductRequest> {
+public class AdvanceCreateProductValidator implements ConstraintValidator<AdvanceRequestBodyValidation, AddProductRequest> {
     private final ProductService productService;
 
     @Override
-    public boolean isValid(CreateProductRequest createProductRequest, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(AddProductRequest createProductRequest, ConstraintValidatorContext constraintValidatorContext) {
         boolean valid = true;
         if (productService.isExistsProductByName(createProductRequest.getName())) {
             constraintValidatorContext

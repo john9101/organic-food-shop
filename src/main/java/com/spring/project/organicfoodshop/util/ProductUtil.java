@@ -10,6 +10,6 @@ public class ProductUtil {
     }
 
     public static String getProductThumnnail(Product product) {
-        return product.getImageUrls().stream().findFirst().orElse(null);
+        return product.getImages().stream().toList().getFirst().getUrl();
     }
 }

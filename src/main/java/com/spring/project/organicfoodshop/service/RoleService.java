@@ -29,7 +29,7 @@ public class RoleService {
         return Set.copyOf(roleRepository.findAllById(ids));
     }
 
-    public Role getRoleByName(RoleEnum roleTypeEnum) {
-        return roleRepository.findByName(roleTypeEnum);
+    public Role getRoleByName(RoleEnum name) {
+        return roleRepository.findByName(name);
     }
 }

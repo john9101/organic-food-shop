@@ -10,26 +10,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-//    private final CategoryRepository categoryRepository;
 
-    public Page<Product> getProductsOfCategory(String slug, Pageable pageable, Specification<Product> productSpecification) {
-        Specification<Product> specification = (root, query, cb) -> cb.equal(root.join("categories").get("slug"), slug);
+    public Page<Product> getProductsOfCategory(Long categoryId, Pageable pageable, Specification<Product> productSpecification) {
+        Specification<Product> specification = (root, query, cb) -> cb.equal(root.join("categories").get("id"), categoryId);
         Specification<Product> combineSpecification = Specification.where(specification).and(productSpecification);
         return productRepository.findAll(combineSpecification, pageable);
     }
 
     public Product handleSaveProduct(Product product) {
         return productRepository.save(product);
-    }
-
-    public Product getProductBySlug(String slug) {
-        return productRepository.findBySlug(slug).orElseThrow(()
-                -> new EntityNotFoundException(FormatterUtil.formatNotFoundExceptionMessage("slug", slug, ModuleEnum.PRODUCT)));
     }
 
     public Product getProductById(Long id) {
@@ -43,5 +41,13 @@ public class ProductService {
 
     public boolean isExistsProductById(Long id) {
         return productRepository.existsById(id);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public void handleDeleteProduct(Product product) {
+        productRepository.delete(product);
     }
 }

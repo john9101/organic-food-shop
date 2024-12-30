@@ -1,4 +1,4 @@
-package com.spring.project.organicfoodshop.domain.response.management.category;
+package com.spring.project.organicfoodshop.domain.response.management.brand;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -10,12 +10,14 @@ import java.time.Instant;
 @Getter
 @Setter
 @Builder
-public class CreatedCategoryResponse {
+public class AddedBrandResponse {
     private Long id;
 
     private String name;
 
-    private String slug;
+    private String description;
+
+    private String imageUrl;
 
     @JsonProperty("created_at")
     private Instant createdAt;

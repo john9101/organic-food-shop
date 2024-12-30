@@ -31,11 +31,4 @@ public class Comment extends AbstractAuditingEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    private Boolean visible;
-
-    @PrePersist
-    protected void handlePrePersistComment() {
-        this.visible = true;
-    }
 }

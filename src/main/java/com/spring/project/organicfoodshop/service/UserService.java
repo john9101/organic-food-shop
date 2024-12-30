@@ -2,16 +2,22 @@ package com.spring.project.organicfoodshop.service;
 
 import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
+import com.spring.project.organicfoodshop.repository.RoleRepository;
 import com.spring.project.organicfoodshop.repository.UserRepository;
 import com.spring.project.organicfoodshop.util.FormatterUtil;
 import com.spring.project.organicfoodshop.util.SecurityUtil;
 import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
+import com.spring.project.organicfoodshop.util.constant.RoleEnum;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,6 +26,7 @@ import java.util.Set;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public User getUserByIdOrThrow(Long id) {
         return userRepository.findByIdOrThrow(id);
@@ -48,6 +55,14 @@ public class UserService {
 
     public User handleSaveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public List<User> getAllCustomers() {
+        return userRepository.findAllByRolesContaining(roleRepository.findByName(RoleEnum.CUSTOMER));
+    }
+
+    public List<User> getAllEmployees() {
+        return userRepository.findAllByRolesContaining(roleRepository.findByName(RoleEnum.EMPLOYEE));
     }
 
     public User handleAssignRoleToEmployee(User employee, String delegatePassword, Set<Role> roles){

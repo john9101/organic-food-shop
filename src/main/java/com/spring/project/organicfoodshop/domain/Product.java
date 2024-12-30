@@ -1,7 +1,6 @@
 package com.spring.project.organicfoodshop.domain;
 
 import com.spring.project.organicfoodshop.util.FormatterUtil;
-import com.spring.project.organicfoodshop.util.constant.SellingUnitEnum;
 import com.spring.project.organicfoodshop.util.constant.MeasurementUnitEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,20 +24,11 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     private String name;
 
-    private String slug;
-
     private String shortDescription;
 
     private String longDescription;
 
     private String title;
-
-//    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<ProductWeight> productWeights = new HashSet<>();
-
-//    @Convert(converter = SellingUnitTypeEnum.class)
-    @Enumerated(EnumType.STRING)
-    private SellingUnitEnum sellingUnit;
 
     @Enumerated(EnumType.STRING)
     private MeasurementUnitEnum measurementUnit;
@@ -49,30 +39,22 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     private Double discountPrice;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ProductEvent> productEvents;
-
     private Double rating;
 
-    @ElementCollection
-    private Set<String> imageUrls;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductImage> images = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "products_categories",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private Boolean visible;
-
     private Integer quantityInStock;
 
-    private Double discountPercentEvent;
+    private Double discountPercent;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CartItem> cartItems;
@@ -83,8 +65,10 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     @PrePersist
     private void prePersistProduct() {
-        this.title = FormatterUtil.formatProductTitle(this.name, this.sellingUnit, this.measurementValue, this.measurementUnit);
-        this.visible = true;
+        this.title = FormatterUtil.formatProductTitle(this.name, this.measurementValue, this.measurementUnit);
+        if (discountPercent != null) {
+            this.discountPrice = this.regularPrice * (1 - this.discountPercent);
+        }
     }
 //    @PrePersist
 //    public void handlePersistProduct() {

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
-public class EditedUserResponse {
+public class AddedEmployeeResponse {
     private Long id;
 
     private String username;
@@ -17,4 +19,16 @@ public class EditedUserResponse {
     private String phone;
 
     private String email;
+
+    private LocalDate dob;
+
+    private Boolean blocked;
+
+    @JsonProperty("hire_date")
+    private LocalDate hireDate;
+
+    private Double salary;
+
+    @JsonProperty("employment_status_title")
+    private String employmentStatusTitle;
 }

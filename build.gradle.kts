@@ -36,8 +36,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("com.cloudinary:cloudinary-http5:2.0.0")
 	compileOnly("org.projectlombok:lombok")
-	implementation("org.flywaydb:flyway-core")
-	implementation("org.flywaydb:flyway-mysql")
 	implementation("com.brevo:brevo:1.0.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.apache.commons:commons-lang3:3.17.0")

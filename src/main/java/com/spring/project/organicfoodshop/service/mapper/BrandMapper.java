@@ -1,20 +1,22 @@
 package com.spring.project.organicfoodshop.service.mapper;
 
 import com.spring.project.organicfoodshop.domain.Brand;
-import com.spring.project.organicfoodshop.domain.request.management.brand.CreateBrandRequest;
-import com.spring.project.organicfoodshop.domain.response.common.product.GotProductDetailResponse;
-import com.spring.project.organicfoodshop.domain.response.management.brand.CreatedBrandResponse;
+import com.spring.project.organicfoodshop.domain.request.management.brand.AddBrandRequest;
+import com.spring.project.organicfoodshop.domain.response.management.brand.AddedBrandResponse;
+import com.spring.project.organicfoodshop.domain.response.management.brand.GotAllBrandResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BrandMapper {
 
     BrandMapper INSTANCE = Mappers.getMapper(BrandMapper.class);
 
-    Brand toBrand(CreateBrandRequest createBrandRequest);
+    Brand toBrand(AddBrandRequest createBrandRequest);
 
-    CreatedBrandResponse toCreatedBrandResponse(Brand brand);
+    AddedBrandResponse toAddedBrandResponse(Brand brand);
 
-    GotProductDetailResponse.BrandInfo toBrandInfo(Brand brand);
+    List<GotAllBrandResponse.Item> toAllBrandItems(List<Brand> brands);
 }
