@@ -41,6 +41,11 @@ public class UserService {
         );
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.CUSTOMER)));
+    }
+
     public Boolean ixExistsUserByEmail(String email) {
         return userRepository.existsByEmail(email);
     }

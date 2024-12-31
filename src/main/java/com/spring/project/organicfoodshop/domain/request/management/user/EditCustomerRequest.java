@@ -1,16 +1,19 @@
 package com.spring.project.organicfoodshop.domain.request.management.user;
 
+import com.spring.project.organicfoodshop.domain.Address;
 import com.spring.project.organicfoodshop.util.constant.GenderEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
+@Builder
 @Getter
 @Setter
-@Builder
-public class AddEmployeeRequest {
+public class EditCustomerRequest {
     private String fullName;
 
     private String email;
@@ -19,13 +22,7 @@ public class AddEmployeeRequest {
 
     private GenderEnum gender;
 
-    private String username;
-
-    private String password;
-
     private LocalDate dob;
 
-    private LocalDate hireDate;
-
-    private Double salary;
+    private Set<Address> addresses;
 }

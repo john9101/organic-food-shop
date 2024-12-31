@@ -6,9 +6,8 @@ import com.spring.project.organicfoodshop.domain.Role;
 import com.spring.project.organicfoodshop.domain.User;
 import com.spring.project.organicfoodshop.domain.request.management.user.AddCustomerRequest;
 import com.spring.project.organicfoodshop.domain.request.management.user.AddEmployeeRequest;
-import com.spring.project.organicfoodshop.domain.request.management.user.EditUserRequest;
+import com.spring.project.organicfoodshop.domain.request.management.user.EditCustomerRequest;
 import com.spring.project.organicfoodshop.domain.response.management.user.*;
-import com.spring.project.organicfoodshop.service.CartService;
 import com.spring.project.organicfoodshop.service.RoleService;
 import com.spring.project.organicfoodshop.service.UserService;
 import com.spring.project.organicfoodshop.service.mapper.UserMapper;
@@ -35,45 +34,54 @@ public class UserController {
     @PostMapping("/customers")
     @ApiRequestMessage("Call add customer API request")
     public ResponseEntity<AddedCustomerResponse> addCustomer(@RequestBody AddCustomerRequest request) {
-        var ref = new Object() {
-            User user = UserMapper.INSTANCE.toUser(request);
-        };
-        ref.user.setPassword(passwordEncoder.encode(ref.user.getPassword()));
-        Role role = roleService.getRoleByName(RoleEnum.CUSTOMER);
-        request.getAddresses().forEach(address -> address.setUser(ref.user));
-        Cart cart = new Cart();
-        cart.setUser(ref.user);
-        ref.user.setAddresses(request.getAddresses());
-        ref.user.setRoles(Collections.singleton(role));
-        ref.user.setAddresses(request.getAddresses());
-        ref.user.setCart(cart);
-        ref.user = userService.handleSaveUser(ref.user);
-        AddedCustomerResponse response = UserMapper.INSTANCE.toAddedCustomerResponse(ref.user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PostMapping("/employees")
-    @ApiRequestMessage("Call add employee API request")
-    public ResponseEntity<AddedEmployeeResponse> addEmployee(@RequestBody AddEmployeeRequest request) {
         User user = UserMapper.INSTANCE.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleService.getRoleByName(RoleEnum.EMPLOYEE);
-        user.getRoles().add(role);
+        Role role = roleService.getRoleByName(RoleEnum.CUSTOMER);
+
+        for (Address address : request.getAddresses()) {
+            address.setUser(user);
+            user.getAddresses().add(address);
+        }
+
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+
+        user.setAddresses(request.getAddresses());
+        user.setRoles(Collections.singleton(role));
+        user.setAddresses(request.getAddresses());
         user = userService.handleSaveUser(user);
-        AddedEmployeeResponse response = UserMapper.INSTANCE.toAddedEmployeeResponse(user);
+        AddedCustomerResponse response = UserMapper.INSTANCE.toAddedCustomerResponse(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/{userId}")
-    @ApiRequestMessage("Call edit user API request")
-    public ResponseEntity<EditedUserResponse> editUser(@PathVariable Long userId, @RequestBody EditUserRequest request) {
-        User user = userService.getUserByIdOrThrow(userId);
+    @PatchMapping("/customers/{customerId}")
+    @ApiRequestMessage("Call edit customer API request")
+    public ResponseEntity<EditedCustomerResponse> editCustomer(@PathVariable Long customerId, @RequestBody EditCustomerRequest request) {
+        User user = userService.getUserById(customerId);
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        user.setAge(request.getAge());
-        user.setGender(GenderEnum.valueOf(request.getGender()));
-        EditedUserResponse response = UserMapper.INSTANCE.toEditedUserResponse(user);
+        user.setGender(request.getGender());
+        user.setDob(request.getDob());
+
+        user.getAddresses().clear();
+        for (Address address : request.getAddresses()) {
+            address.setUser(user);
+            user.getAddresses().add(address);
+        }
+
+        user = userService.handleSaveUser(user);
+        EditedCustomerResponse response = UserMapper.INSTANCE.toEditedCustomerResponse(user);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/customers/{customerId}")
+    @ApiRequestMessage("Call customer detail API request")
+    public ResponseEntity<GotCustomerDetailResponse> getCustomerDetail(@PathVariable Long customerId) {
+        User user = userService.getUserById(customerId);
+        GotCustomerDetailResponse response = UserMapper.INSTANCE.toGotCustomerDetailResponse(user);
+        response.setGenderName(user.getGender().name());
         return ResponseEntity.ok(response);
     }
 
@@ -95,4 +103,15 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/employees")
+    @ApiRequestMessage("Call add employee API request")
+    public ResponseEntity<AddedEmployeeResponse> addEmployee(@RequestBody AddEmployeeRequest request) {
+        User user = UserMapper.INSTANCE.toUser(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role role = roleService.getRoleByName(RoleEnum.EMPLOYEE);
+        user.getRoles().add(role);
+        user = userService.handleSaveUser(user);
+        AddedEmployeeResponse response = UserMapper.INSTANCE.toAddedEmployeeResponse(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }

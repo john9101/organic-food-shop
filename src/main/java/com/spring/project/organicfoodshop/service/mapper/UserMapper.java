@@ -34,7 +34,9 @@ public interface UserMapper {
 
     AddedEmployeeResponse toAddedEmployeeResponse(User user);
 
-    EditedUserResponse toEditedUserResponse(User user);
+    EditedCustomerResponse toEditedCustomerResponse(User user);
+
+    GotCustomerDetailResponse toGotCustomerDetailResponse(User user);
 
     List<GotAllCustomersResponse.Item> toAllCustomerItems(List<User> users);
 

@@ -35,8 +35,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private String fullName;
 
-    private Integer age;
-
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 

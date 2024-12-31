@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -27,7 +28,7 @@ public class GotAllEmployeesResponse {
 
         private String phone;
 
-        private String dob;
+        private LocalDate dob;
 
         private Boolean blocked;
     }

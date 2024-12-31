@@ -19,8 +19,6 @@ public class AddCustomerRequest {
 
     private String phone;
 
-    private Integer age;
-
     private LocalDate dob;
 
     private GenderEnum gender;

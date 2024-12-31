@@ -4,6 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum ModuleEnum {
+    CUSTOMER("Khách hàng"),
+    EMPLOYEE("Nhân viên"),
     ACCOUNT("tài khoản"),
     PRODUCT("sản phẩm"),
     CART("giỏ hàng"),
