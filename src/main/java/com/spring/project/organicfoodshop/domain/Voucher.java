@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vouchers")
@@ -18,11 +19,27 @@ public class Voucher extends AbstractAuditingEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String code;
+
+    private Double minimumAmount;
 
     private String description;
 
-    private Double discountPercent;
+    private Integer discountPercent;
 
     private Integer quantity;
+
+    private LocalDate effectiveDate;
+
+    private LocalDate expiryDate;
+
+    private Boolean isVisible;
+
+    private Boolean isDeleted;
+
+    @PrePersist
+    protected void onPrePersistVoucher() {
+        this.isVisible = true;
+        this.isDeleted = false;
+    }
 }

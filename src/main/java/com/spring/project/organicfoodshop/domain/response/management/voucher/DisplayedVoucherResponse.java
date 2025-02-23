@@ -6,15 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatedVoucherResponse {
+public class DisplayedVoucherResponse {
     private Long id;
 
-    private String title;
-
-    private String description;
-
-    @JsonProperty("discount_percent")
-    private Double discountPercent;
-
-    private Integer quantity;
+    @JsonProperty("is_visible")
+    private Boolean isVisible;
 }

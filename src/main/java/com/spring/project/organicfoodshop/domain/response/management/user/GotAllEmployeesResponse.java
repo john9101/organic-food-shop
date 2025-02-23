@@ -1,6 +1,7 @@
 package com.spring.project.organicfoodshop.domain.response.management.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spring.project.organicfoodshop.util.constant.EmploymentStatusEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,18 @@ public class GotAllEmployeesResponse {
 
         private LocalDate dob;
 
-        private Boolean blocked;
+        private Double salary;
+
+        @JsonProperty("employment_status")
+        private EmploymentStatusEnum employmentStatus;
+
+        @JsonProperty("hire_date")
+        private LocalDate hireDate;
+
+        @JsonProperty("is_activated")
+        private Boolean isActivated;
+
+        @JsonProperty("is_blocked")
+        private Boolean isBlocked;
     }
 }

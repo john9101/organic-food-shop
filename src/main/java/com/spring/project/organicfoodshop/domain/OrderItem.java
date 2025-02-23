@@ -22,6 +22,9 @@ public class OrderItem  extends AbstractAuditingEntity{
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @OneToOne(mappedBy = "orderItem",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Review review;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

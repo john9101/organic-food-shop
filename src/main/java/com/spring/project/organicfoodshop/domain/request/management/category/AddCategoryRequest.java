@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class AddCategoryRequest {
     private String name;
+    private String description;
 }

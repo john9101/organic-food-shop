@@ -39,13 +39,13 @@ public class Order extends AbstractAuditingEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String fullName;
+    private String recipientFullName;
 
-    private String phone;
+    private String recipientPhone;
 
-    private String email;
+    private String recipientEmail;
 
-    private String address;
+    private String recipientSpecificPlace;
 
     private String province;
 
@@ -56,6 +56,10 @@ public class Order extends AbstractAuditingEntity{
     private String note;
 
     private Double totalPrice;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 
     @PrePersist
     protected void onPrePersistOrder() {

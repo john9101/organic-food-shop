@@ -54,7 +54,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     private Integer quantityInStock;
 
-    private Double discountPercent;
+    private Integer discountPercent;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CartItem> cartItems;
@@ -62,12 +62,18 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
+    private Boolean isVisible;
+
+    private Boolean isDeleted;
 
     @PrePersist
     private void prePersistProduct() {
+        this.isVisible = true;
+        this.isDeleted = false;
+        this.rating = 0.0;
         this.title = FormatterUtil.formatProductTitle(this.name, this.measurementValue, this.measurementUnit);
         if (discountPercent != null) {
-            this.discountPrice = this.regularPrice * (1 - this.discountPercent);
+            this.discountPrice = this.regularPrice * (1 - this.discountPercent / 100);
         }
     }
 //    @PrePersist

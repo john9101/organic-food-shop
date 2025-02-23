@@ -25,11 +25,16 @@ public class Permission extends AbstractAuditingEntity implements Serializable {
 
     private String name;
 
-    private Boolean active;
+    private Boolean isActive;
 
     private String description;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
     private Set<Role> roles;
+
+    @PrePersist
+    protected void onPrePersist() {
+        this.isActive = true;
+    }
 }

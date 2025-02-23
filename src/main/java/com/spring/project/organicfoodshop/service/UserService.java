@@ -81,7 +81,7 @@ public class UserService {
 
     public void handleActivate(String activationToken) {
         User user = userRepository.findByActivationToken(activationToken);
-        user.setActivated(true);
+        user.setIsActivated(true);
         user.setActivationToken(null);
         handleSaveUser(user);
     }

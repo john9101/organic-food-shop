@@ -30,6 +30,10 @@ public class GotAllCustomersResponse {
 
         private LocalDate dob;
 
-        private Boolean blocked;
+        @JsonProperty("is_activated")
+        private Boolean isActivated;
+
+        @JsonProperty("is_blocked")
+        private Boolean isBlocked;
     }
 }

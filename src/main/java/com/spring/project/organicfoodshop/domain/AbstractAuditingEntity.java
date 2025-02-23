@@ -39,7 +39,7 @@ public abstract class AbstractAuditingEntity implements Serializable {
     private Instant updatedAt;
 
     @LastModifiedBy
-    @JsonProperty("update_by")
+    @JsonProperty("updated_by")
     @Column(name = "updated_by", insertable = false)
     private String updatedBy;
 }

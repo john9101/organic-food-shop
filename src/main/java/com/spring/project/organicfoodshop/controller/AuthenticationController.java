@@ -79,12 +79,12 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userService.getUserByEmail(SecurityUtil.extractFromPrincipal(authentication), false);
-        LoggedInResponse.UserInfo userInfo = UserMapper.INSTANCE.toLoggedInUserInfo(user);
-        String accessToken = jwtService.createToken(authentication, userInfo, false);
-        String refreshToken = jwtService.createToken(authentication, userInfo, true);
+        LoggedInResponse.Metadata metadata = UserMapper.INSTANCE.toLoggedInMetadataResponse(user);
+        String accessToken = jwtService.createToken(authentication, metadata, false);
+        String refreshToken = jwtService.createToken(authentication, metadata, true);
         LoggedInResponse loginResponse = LoggedInResponse.builder()
                 .accessToken(accessToken)
-                .userInfo(userInfo)
+                .metadata(metadata)
                 .build();
         ResponseCookie responseCookie = ResponseCookie
                 .fromClientResponse("refresh_token", refreshToken)
@@ -95,15 +95,15 @@ public class AuthenticationController {
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(loginResponse);
     }
-
-    @GetMapping("/introspect")
-    @ApiRequestMessage("Call introspect API request")
-    public ResponseEntity<IntrospectedResponse> introspect() {
-        User user = userService.getUserByEmail(SecurityUtil.getCurrentUserPrincipal().orElse(null), false);
-        IntrospectedResponse.UserInfo userInfo = UserMapper.INSTANCE.toIntrospectedUserInfo(user);
-        IntrospectedResponse introspectedResponse = IntrospectedResponse.builder().userInfo(userInfo).build();
-        return ResponseEntity.ok().body(introspectedResponse);
-    }
+//
+//    @GetMapping("/introspect")
+//    @ApiRequestMessage("Call introspect API request")
+//    public ResponseEntity<IntrospectedResponse> introspect() {
+//        User user = userService.getUserByEmail(SecurityUtil.getCurrentUserPrincipal().orElse(null), false);
+//        IntrospectedResponse.UserInfo userInfo = UserMapper.INSTANCE.toIntrospectedUserInfo(user);
+//        IntrospectedResponse introspectedResponse = IntrospectedResponse.builder().userInfo(userInfo).build();
+//        return ResponseEntity.ok().body(introspectedResponse);
+//    }
 }
 
 

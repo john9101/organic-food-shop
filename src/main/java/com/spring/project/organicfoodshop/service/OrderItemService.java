@@ -2,6 +2,9 @@ package com.spring.project.organicfoodshop.service;
 
 import com.spring.project.organicfoodshop.domain.OrderItem;
 import com.spring.project.organicfoodshop.repository.OrderItemRepository;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
+import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,8 @@ import java.util.Set;
 public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
 
-    public Set<OrderItem> handleSaveOrderItems(Set<OrderItem> orderItems) {
-        return Set.copyOf(orderItemRepository.saveAll(orderItems));
+    public OrderItem getOrderItemById(Long id) {
+        return orderItemRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.ORDER_ITEM)));
     }
 }

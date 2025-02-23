@@ -17,21 +17,17 @@ public class LoggedInResponse {
     @JsonProperty("access_token")
     private String accessToken;
 
-    @JsonProperty("user_info")
-    private UserInfo userInfo;
+    @JsonProperty("metadata")
+    private Metadata metadata;
 
     @Getter
     @Setter
-    public static class UserInfo {
+    public static class Metadata {
         private Long id;
-
-        private String username;
 
         @JsonProperty("full_name")
         private String fullName;
 
         private String email;
-
-        private String avatar;
     }
 }

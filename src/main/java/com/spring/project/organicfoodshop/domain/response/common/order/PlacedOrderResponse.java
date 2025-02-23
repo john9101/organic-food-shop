@@ -18,5 +18,5 @@ public class PlacedOrderResponse {
     private PaymentMethodEnum paymentMethod;
 
     @JsonProperty("payment_url")
-    private String payementUrl;
+    private String paymentUrl;
 }

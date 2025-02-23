@@ -2,9 +2,7 @@ package com.spring.project.organicfoodshop.service.mapper;
 
 import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.domain.request.management.category.AddCategoryRequest;
-import com.spring.project.organicfoodshop.domain.response.management.category.AddedCategoryResponse;
-import com.spring.project.organicfoodshop.domain.response.management.category.GotAllCatgoriesResponse;
-import com.spring.project.organicfoodshop.domain.response.management.category.GotCategoryDetailResponse;
+import com.spring.project.organicfoodshop.domain.response.management.category.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -19,6 +17,13 @@ public interface CategoryMapper {
 
     AddedCategoryResponse toAddedCategoryResponse(Category category);
 
+    EditedCategoryResponse toEditedCategoryResponse(Category category);
+
+    DeletedCategoryResponse toDeletedCategoryResponse(Category category);
+
+    RecoveredCategoryResponse toRecoveredCategoryResponse(Category category);
+
+    DisplayedCategoryResponse toDisplayedCategoryResponse(Category category);
     List<GotAllCatgoriesResponse.Item> toAllCategoryItems(List<Category> categories);
 
     GotCategoryDetailResponse toGotCategoryDetailResponse(Category category);

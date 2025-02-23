@@ -7,13 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlaceOrderRequest {
-    private String fullName;
+    private String recipientFullName;
 
-    private String phone;
+    private String recipientPhone;
 
-    private String email;
+    private String recipientEmail;
 
-    private String address;
+    private String recipientSpecificPlace;
 
     private String province;
 

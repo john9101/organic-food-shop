@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class AddBrandRequest {
     private String name;
+    private String description;
 }

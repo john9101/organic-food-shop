@@ -27,7 +27,7 @@ public class JwtService {
     @Value("${security.authentication.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenValidityInSeconds;
 
-    public String createToken(Authentication authentication, LoggedInResponse.UserInfo userInfo, boolean refreshToken) {
+    public String createToken(Authentication authentication, LoggedInResponse.Metadata metadata, boolean refreshToken) {
         Instant issuedAt = Instant.now();
         Instant expiresAt;
         if (!refreshToken) {
@@ -40,7 +40,7 @@ public class JwtService {
                 .issuedAt(issuedAt)
                 .expiresAt(expiresAt)
                 .subject(SecurityUtil.extractFromPrincipal(authentication))
-                .claim("user_info", userInfo);
+                .claim("metadata", metadata);
 
         if (!refreshToken) {
             jwtClaimsSetBuilder.claim("scope", SecurityUtil.getAuthorities(authentication).collect(Collectors.toSet()));

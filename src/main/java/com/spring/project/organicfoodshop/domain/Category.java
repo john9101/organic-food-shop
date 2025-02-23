@@ -1,5 +1,6 @@
 package com.spring.project.organicfoodshop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,14 @@ public class Category extends AbstractAuditingEntity implements Serializable {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Product> products;
+
+    private Boolean isVisible;
+
+    private Boolean isDeleted;
+
+    @PrePersist
+    protected void onPrePersistCategory() {
+        this.isVisible = true;
+        this.isDeleted = false;
+    }
 }

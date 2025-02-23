@@ -70,6 +70,7 @@ public class CartController {
         AddedItemToCartResponse response = AddedItemToCartResponse.builder()
                 .totalCount(currentCart.getCartItems().size())
                 .itemId(cartItem.getId())
+                .itemProductId(product.getId())
                 .itemTitle(cartItem.getProduct().getTitle())
                 .itemQuantity(cartItem.getQuantity())
                 .itemPrice(ProductUtil.getProductPrice(product))

@@ -28,14 +28,15 @@ public class SecurityConfiguration{
             "/auth/logout",
             "/auth/register",
             "/auth/activate",
-            "/catgories/**"
+            "/catgories/**",
+            "/orders/**",
     };
 
     private static final String[] AUTHENTICATED_ENDPOINTS = {
             "/auth/introspect",
             "/accounts/**",
             "/carts/**",
-            "/orders/**",
+//            "/orders/**",
     };
 
     @Bean

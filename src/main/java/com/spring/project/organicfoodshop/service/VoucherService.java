@@ -2,9 +2,14 @@ package com.spring.project.organicfoodshop.service;
 
 import com.spring.project.organicfoodshop.domain.Voucher;
 import com.spring.project.organicfoodshop.repository.VoucherRepository;
+import com.spring.project.organicfoodshop.util.FormatterUtil;
+import com.spring.project.organicfoodshop.util.constant.ModuleEnum;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -17,8 +22,8 @@ public class VoucherService {
         return voucherRepository.save(voucher);
     }
 
-    public Set<Voucher> getAllVouchers() {
-        return Set.copyOf(voucherRepository.findAll());
+    public List<Voucher> getAllVouchers() {
+        return voucherRepository.findAll();
     }
 
     public void handleDeleteVoucherById(Long id) {
@@ -26,6 +31,7 @@ public class VoucherService {
     }
 
     public Voucher getVoucherById(Long id) {
-        return voucherRepository.findById(id).orElse(null);
+        return voucherRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.VOUCHER)));
     }
 }

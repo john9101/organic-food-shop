@@ -25,5 +25,11 @@ public class GotAllProductsResponse {
 
         @JsonProperty("discount_price")
         private Double discountPrice;
+
+        @JsonProperty("is_visible")
+        private Boolean isVisible;
+
+        @JsonProperty("discount_percent")
+        private Integer discountPercent;
     }
 }

@@ -17,11 +17,9 @@ public class AddedBrandResponse {
 
     private String description;
 
-    private String imageUrl;
+    @JsonProperty("is_visible")
+    private Boolean isVisible;
 
-    @JsonProperty("created_at")
-    private Instant createdAt;
-
-    @JsonProperty("created_by")
-    private String createdBy;
+    @JsonProperty("is_deleted")
+    private Boolean isDeleted;
 }

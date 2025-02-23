@@ -15,7 +15,7 @@ public class IntrospectedResponse {
 
     @Getter
     @Setter
-    public static class UserInfo extends LoggedInResponse.UserInfo {
+    public static class UserInfo extends LoggedInResponse.Metadata {
         private String phone;
 
         private Integer age;

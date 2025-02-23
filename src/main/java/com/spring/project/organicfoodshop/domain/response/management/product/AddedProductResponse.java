@@ -22,9 +22,6 @@ public class AddedProductResponse {
     @JsonProperty("discount_price")
     private Double discountPrice;
 
-    @JsonProperty("brand_name")
-    private String brandName;
-
-    @JsonProperty("category_name")
-    private String categoryName;
+    @JsonProperty("is_visible")
+    private Boolean isVisible;
 }

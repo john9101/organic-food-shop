@@ -59,10 +59,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Set<Role> roles = new HashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Boolean activated;
+    private Boolean isActivated;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Boolean blocked;
+    private Boolean isBlocked;
 
     private String resetPasswordToken;
 
@@ -82,8 +82,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @PrePersist
     protected void onPrePersistUser() {
-        this.activated = false;
-        this.blocked = false;
+        this.isActivated = false;
+        this.isBlocked = false;
         this.resetPasswordToken = null;
         this.activationToken = UUID.randomUUID().toString();
 

@@ -28,7 +28,7 @@ public class Role extends AbstractAuditingEntity implements Serializable {
 
     private String description;
 
-    private Boolean active;
+    private Boolean isActive;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
@@ -41,4 +41,9 @@ public class Role extends AbstractAuditingEntity implements Serializable {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<Permission> permissions;
+
+    @PrePersist
+    protected void onPrePersistRole() {
+        this.isActive = true;
+    }
 }

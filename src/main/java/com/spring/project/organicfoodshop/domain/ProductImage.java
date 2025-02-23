@@ -1,5 +1,7 @@
 package com.spring.project.organicfoodshop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import java.io.Serializable;
 @Table(name = "product_images")
 @Getter
 @Setter
+@JsonIgnoreProperties({ "created_at", "created_by" , "updated_at", "updated_by", "product"})
 public class ProductImage extends AbstractAuditingEntity implements Serializable {
 
     @Serial

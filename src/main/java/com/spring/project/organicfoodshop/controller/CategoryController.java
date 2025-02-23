@@ -5,10 +5,9 @@ import com.spring.project.organicfoodshop.domain.Category;
 import com.spring.project.organicfoodshop.domain.Product;
 import com.spring.project.organicfoodshop.domain.request.common.product.QueryProductsRequest;
 import com.spring.project.organicfoodshop.domain.request.management.category.AddCategoryRequest;
+import com.spring.project.organicfoodshop.domain.request.management.category.EditCategoryRequest;
 import com.spring.project.organicfoodshop.domain.response.common.pagination.PagedResponse;
-import com.spring.project.organicfoodshop.domain.response.management.category.AddedCategoryResponse;
-import com.spring.project.organicfoodshop.domain.response.management.category.GotAllCatgoriesResponse;
-import com.spring.project.organicfoodshop.domain.response.management.category.GotCategoryDetailResponse;
+import com.spring.project.organicfoodshop.domain.response.management.category.*;
 import com.spring.project.organicfoodshop.service.CategoryService;
 import com.spring.project.organicfoodshop.service.ProductService;
 import com.spring.project.organicfoodshop.service.mapper.CategoryMapper;
@@ -38,11 +37,52 @@ public class CategoryController {
 
     @PostMapping
     @ApiRequestMessage("Call add category API request")
-    public ResponseEntity<AddedCategoryResponse> addCategory(@RequestBody AddCategoryRequest createCategoryRequest) {
-        Category category = CategoryMapper.INSTANCE.toCategory(createCategoryRequest);
+    public ResponseEntity<AddedCategoryResponse> addCategory(@RequestBody AddCategoryRequest request) {
+        Category category = CategoryMapper.INSTANCE.toCategory(request);
         category = categoryService.handleSaveCategory(category);
         AddedCategoryResponse response = CategoryMapper.INSTANCE.toAddedCategoryResponse(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{categoryId}")
+    @ApiRequestMessage("Call edit category API request")
+    public ResponseEntity<EditedCategoryResponse> editCategory(@RequestBody EditCategoryRequest request, @PathVariable Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+        category = categoryService.handleSaveCategory(category);
+        EditedCategoryResponse response = CategoryMapper.INSTANCE.toEditedCategoryResponse(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/{categoryId}")
+    @ApiRequestMessage("Call delete category API request")
+    public ResponseEntity<DeletedCategoryResponse> deleteCategory(@PathVariable Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
+        category.setIsDeleted(true);
+        category = categoryService.handleSaveCategory(category);
+        DeletedCategoryResponse response = CategoryMapper.INSTANCE.toDeletedCategoryResponse(category);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{categoryId}/recovery")
+    @ApiRequestMessage("Call recover category API request")
+    public ResponseEntity<RecoveredCategoryResponse> recoverCategory(@PathVariable Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
+        category.setIsDeleted(false);
+        category = categoryService.handleSaveCategory(category);
+        RecoveredCategoryResponse response = CategoryMapper.INSTANCE.toRecoveredCategoryResponse(category);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{categoryId}/visibility/{isVisible}")
+    @ApiRequestMessage("Call display category API request")
+    public ResponseEntity<DisplayedCategoryResponse> displayCategory(@PathVariable Long categoryId, @PathVariable Boolean isVisible) {
+        Category category = categoryService.getCategoryById(categoryId);
+        category.setIsVisible(isVisible);
+        category = categoryService.handleSaveCategory(category);
+        DisplayedCategoryResponse response = CategoryMapper.INSTANCE.toDisplayedCategoryResponse(category);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

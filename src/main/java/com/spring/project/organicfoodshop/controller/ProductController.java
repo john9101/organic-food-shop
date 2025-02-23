@@ -4,24 +4,19 @@ import com.spring.project.organicfoodshop.domain.*;
 import com.spring.project.organicfoodshop.domain.request.management.product.AddProductRequest;
 import com.spring.project.organicfoodshop.domain.request.management.product.EditProductRequest;
 import com.spring.project.organicfoodshop.domain.response.common.product.GotProductDetailResponse;
-import com.spring.project.organicfoodshop.domain.response.management.product.AddedProductResponse;
-import com.spring.project.organicfoodshop.domain.response.management.product.DeletedProductResponse;
-import com.spring.project.organicfoodshop.domain.response.management.product.EditedProductResponse;
-import com.spring.project.organicfoodshop.domain.response.management.product.GotAllProductsResponse;
+import com.spring.project.organicfoodshop.domain.response.common.product.SearchedProductResponse;
+import com.spring.project.organicfoodshop.domain.response.management.product.*;
 import com.spring.project.organicfoodshop.service.*;
-import com.spring.project.organicfoodshop.service.mapper.CategoryMapper;
 import com.spring.project.organicfoodshop.service.mapper.ProductMapper;
 import com.spring.project.organicfoodshop.util.annotation.ApiRequestMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -34,7 +29,7 @@ public class ProductController {
 
     @PostMapping
     @ApiRequestMessage("Call add product API request")
-    public ResponseEntity<AddedProductResponse> addProduct(@RequestBody AddProductRequest request, @RequestParam List<MultipartFile> images) throws IOException {
+    public ResponseEntity<AddedProductResponse> addProduct(@ModelAttribute AddProductRequest request, @RequestParam("images") List<MultipartFile> images) throws IOException {
         Product product = ProductMapper.INSTANCE.toProduct(request);
         Brand brand = brandService.getBrandById(request.getBrandId()).orElse(null);
         Category category = categoryService.getCategoryById(request.getCategoryId());
@@ -43,14 +38,12 @@ public class ProductController {
         cloudinaryService.handleUploadProductImage(product, images);
         product = productService.handleSaveProduct(product);
         AddedProductResponse response = ProductMapper.INSTANCE.toAddedProductResponse(product);
-        response.setBrandName(product.getBrand().getName());
-        response.setCategoryName(product.getCategory().getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{productId}")
     @ApiRequestMessage("Call edit product API request")
-    public ResponseEntity<EditedProductResponse> editProduct(@PathVariable Long productId , @RequestBody EditProductRequest request, @RequestParam(required = false) List<MultipartFile> images) throws IOException {
+    public ResponseEntity<EditedProductResponse> editProduct(@PathVariable Long productId , @ModelAttribute EditProductRequest request, @RequestParam(required = false) List<MultipartFile> images) throws IOException {
         Product product = productService.getProductById(productId);
         Brand brand = brandService.getBrandById(request.getBrandId()).orElse(null);
         Category category = categoryService.getCategoryById(request.getCategoryId());
@@ -58,22 +51,41 @@ public class ProductController {
         product.setCategory(category);
         if (images != null && !images.isEmpty()) {
             cloudinaryService.handleRemoveProductImage(product);
+            product.getImages().clear();
             cloudinaryService.handleUploadProductImage(product, images);
         }
         product = productService.handleSaveProduct(product);
         EditedProductResponse response = ProductMapper.INSTANCE.toEditedProductResponse(product);
-        response.setBrandName(product.getBrand().getName());
-        response.setCategoryName(product.getCategory().getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{productId}")
     @ApiRequestMessage("Call delete product API request")
-    public ResponseEntity<DeletedProductResponse> getProduct(@PathVariable("productId") Long productId) throws IOException {
+    public ResponseEntity<DeletedProductResponse> deleteProduct(@PathVariable("productId") Long productId){
         Product product = productService.getProductById(productId);
-        cloudinaryService.handleRemoveProductImage(product);
-        productService.handleDeleteProduct(product);
-        DeletedProductResponse response = DeletedProductResponse.builder().id(productId).build();
+        product.setIsDeleted(true);
+        product = productService.handleSaveProduct(product);
+        DeletedProductResponse response = ProductMapper.INSTANCE.toDeletedProductResponse(product);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{productId}/recovery")
+    @ApiRequestMessage("Call recover product API request")
+    public ResponseEntity<RecoveredProductResponse> recoverProduct(@PathVariable("productId") Long productId){
+        Product product = productService.getProductById(productId);
+        product.setIsDeleted(false);
+        product = productService.handleSaveProduct(product);
+        RecoveredProductResponse response = ProductMapper.INSTANCE.toRecoveredProductResponse(product);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{productId}/visibility/{isVisible}")
+    @ApiRequestMessage("Call recover product API request")
+    public ResponseEntity<DisplayedProductResponse> recoverProduct(@PathVariable("productId") Long productId, @PathVariable("isVisible") Boolean isVisible){
+        Product product = productService.getProductById(productId);
+        product.setIsVisible(isVisible);
+        product = productService.handleSaveProduct(product);
+        DisplayedProductResponse response = ProductMapper.INSTANCE.toDisplayedProductResponse(product);
         return ResponseEntity.ok(response);
     }
 
@@ -82,8 +94,12 @@ public class ProductController {
     public ResponseEntity<GotProductDetailResponse> getProductDetail(@PathVariable("productId") Long productId) {
         Product product = productService.getProductById(productId);
         GotProductDetailResponse response = ProductMapper.INSTANCE.toGotProductDetailResponse(product);
-        response.setCategoryName(product.getCategory().getName());
-        response.setBrandName(product.getBrand().getName());
+        Category category = product.getCategory();
+        Brand brand = product.getBrand();
+        response.setCategoryName(category.getName());
+        response.setCategoryId(category.getId());
+        response.setBrandName(brand.getName());
+        response.setBrandId(brand.getId());
         response.setMeasurementUnitName(product.getMeasurementUnit().name());
         return ResponseEntity.ok(response);
     }
@@ -97,4 +113,13 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/searches")
+    @ApiRequestMessage("Call search product API request")
+    public ResponseEntity<SearchedProductResponse> searchProduct(@RequestParam String keyword) {
+        List<Product> products = productService.handleSearchProduct(keyword);
+        List<SearchedProductResponse.Item> items = ProductMapper.INSTANCE.toSearchedProductItems(products);
+        SearchedProductResponse response = SearchedProductResponse.builder().items(items).build();
+        return ResponseEntity.ok(response);
+    }
 }

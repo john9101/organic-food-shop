@@ -16,6 +16,9 @@ public class AddedItemToCartResponse {
     @JsonProperty("item_id")
     private Long itemId;
 
+    @JsonProperty("item_product_id")
+    private Long itemProductId;
+
     @JsonProperty("item_title")
     private String itemTitle;
 

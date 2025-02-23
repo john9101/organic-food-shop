@@ -35,6 +35,10 @@ public class ProductService {
                 new EntityNotFoundException(FormatterUtil.formateExistExceptionMessage("id", id, ModuleEnum.PRODUCT)));
     }
 
+    public List<Product> handleSearchProduct(String keyword) {
+        return productRepository.findByNameOrTitleContaining(keyword, keyword);
+    }
+
     public boolean isExistsProductByName(String name) {
         return productRepository.existsByName(name);
     }

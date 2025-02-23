@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.spring.project.organicfoodshop.domain.Product;
 import com.spring.project.organicfoodshop.domain.ProductImage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,18 +21,21 @@ public class CloudinaryService {
 
     private final Cloudinary cloudinary;
 
+    @Value("${cloudinary.products-folder}")
+    private String productsFolder;
+
     public void handleUploadProductImage(Product product, List<MultipartFile> images) throws IOException {
         Set<ProductImage> productImages = new HashSet<>();
         for (MultipartFile image : images) {
             if (image != null && !image.isEmpty()) {
-                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", productsFolder));
                 ProductImage productImage = new ProductImage();
                 productImage.setUrl(uploadResult.get("secure_url").toString());
                 productImage.setProduct(product);
                 productImages.add(productImage);
             }
         }
-        product.setImages(productImages);
+        product.getImages().addAll(productImages);
     }
 
     public void handleRemoveProductImage(Product product) throws IOException {

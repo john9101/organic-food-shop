@@ -10,9 +10,12 @@ public enum ModuleEnum {
     PRODUCT("sản phẩm"),
     CART("giỏ hàng"),
     CART_ITEM("sản phẩm trong giỏ hàng"),
+    ORDER_ITEM("sản phẩm trong đơn hàng"),
     CATEGORY("danh mục"),
     ORDER("đơn hàng"),
-    VOUCHER("mã giảm giá");
+    VOUCHER("mã giảm giá"),
+    COMMENT("bình luận"),
+    ADDRESS("địa chỉ");
 
     private final String name;
 
