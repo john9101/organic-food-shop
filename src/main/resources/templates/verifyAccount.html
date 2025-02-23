@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body style="letter-spacing: -0.05rem; font-family: Inter,serif; display: flex; justify-content: center; align-items: center">
+<div style="padding: 2rem; border-radius: 0.5rem; max-width: 22rem; color: #111827; border: 1px solid #111827; background-color: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); ">
+    <div style="display: flex;margin-bottom: 1.5rem;justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; ">
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="margin-right: 0.2rem; width: 2rem; height: 2rem; color: #111827; "
+            >
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+            </svg>
+            <span style="font-size: 1.28rem;line-height: 1.75rem; font-weight: 300; ">organic<span style="font-weight: 900; ">box</span></span>
+        </div>
+        <div style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;line-height: 1.25rem; font-weight: 500; color: #6B7280; background-color: #F3F4F6; "
+             th:text="${date}"></div>
+    </div>
+    <div style="margin-top: 1rem;">
+        <h2 style="font-size: 1.5rem;line-height: 2rem; font-weight: 700; ">Xác Nhận Tài Khoản</h2>
+        <p style="color: #6B7280; line-height: 1.4rem">
+            Để hoàn tất đăng ký, vui lòng nhập mã OTP sau:
+        </p>
+        <div style="padding: 1.5rem; border-radius: 0.5rem; text-align: center; background-color: #F3F4F6; ">
+            <span style="font-size: 2.25rem;line-height: 2.5rem; font-weight: 700; letter-spacing: 0.05em; " th:text="${otp}"></span>
+        </div>
+        <p style="color: #6B7280; margin-bottom: unset; line-height: 1.4rem">
+            Mã sẽ hết hạn sau <b th:text="${timeout}"></b> phút. Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email
+            này.
+        </p>
+    </div>
+</div>
+</body>
+</html>
